@@ -137,6 +137,34 @@ class Sink:
         dic[key1] = att1_val
         dic[key2] = att2_val
 
+    def start_scan(self):
+        config = {}
+        config["sink_id"] = self.sink_id
+        partial = False
+
+        # Should always be available
+        try:
+            config["started"] = (self.proxy.StackStatus & 0x01) == 0
+        except GLib.Error as e:
+            error = ReturnCode.error_from_dbus_exception(str(e))
+            logging.error("Cannot get Stack state: %s", error.name)
+
+        return self.proxy.StartScan()
+
+    def get_nbors(self):
+        config = {}
+        config["sink_id"] = self.sink_id
+        partial = False
+
+        # Should always be available
+        try:
+            config["started"] = (self.proxy.StackStatus & 0x01) == 0
+        except GLib.Error as e:
+            error = ReturnCode.error_from_dbus_exception(str(e))
+            logging.error("Cannot get Stack state: %s", error.name)
+
+        return self.proxy.GetNbors
+
     def read_config(self):
         config = {}
         config["sink_id"] = self.sink_id
